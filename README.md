@@ -1,6 +1,6 @@
 [fabrician.org](http://fabrician.org/)
 ==========================================================================
-Silver Fabric Oracle Coherence 3.7.1 Enabler User Guide
+Oracle Coherence Enabler User Guide
 ==========================================================================
  
 Introduction
