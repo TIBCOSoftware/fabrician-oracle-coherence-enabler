@@ -1,6 +1,6 @@
 [fabrician.org](http://fabrician.org/)
 ==========================================================================
-Silver Fabric Oracle Coherence 3.7.1 Enabler User Guide
+Oracle Coherence Enabler User Guide
 ==========================================================================
  
 Introduction
@@ -12,10 +12,24 @@ management of a distributed Oracle Coherence cache cluster.
 
 Summary
 --------------------------------------
-Feature Description
-Enabled platform    Oracle Coherence 3.7.1
-Cluster configuration support   Yes
-Dynamic clustering support  Yes
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>Enabled platform</td>
+    <td>Oracle Coherence 3.7.1</td>
+  </tr>
+  <tr>
+    <td>Cluster configuration support</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>Dynamic clustering support</td>
+    <td>Yes</td>
+  </tr>
+</table>
 
 Supported Platforms
 --------------------------------------
@@ -44,7 +58,8 @@ The Distribution Grid Library is created by performing the following steps:
 * Download and extract the Oracle Coherence for Java package from http://www.oracle.com.
 * Create a grid-library.xml file with the below contents and place it alongside the coherence directory.
 * Create a tar.gz or zip of the contents.
-```XML
+
+```xml
     <grid-library os="all">
         <grid-library-name>oracle-coherence-distribution</grid-library-name>
         <grid-library-version>3.7.1</grid-library-version>
