@@ -1,0 +1,30 @@
+<?xml version='1.0'?>
+<permissions>
+  <grant>
+    <principal>
+      <class>javax.security.auth.x500.X500Principal</class>
+      <name>CN=Manager,OU=MyUnit</name>
+    </principal>
+
+    <permission>
+      <target>*</target>
+      <action>all</action>
+    </permission>
+  </grant>
+
+  <grant>
+    <principal>
+      <class>javax.security.auth.x500.X500Principal</class>
+      <name>CN=Worker,OU=MyUnit</name>
+    </principal>
+
+    <permission>
+      <target>cache=common*</target>
+      <action>join</action>
+    </permission>
+    <permission>
+      <target>service=invocation</target>
+      <action>all</action>
+    </permission>
+  </grant>
+</permissions>

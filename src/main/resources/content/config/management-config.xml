@@ -1,0 +1,14 @@
+<!--
+Service configuration descriptor for the Management invocation service used by the
+Coherence JMX framework.
+-->
+<config>
+  <!--
+   Use standard Java serialization regardless of the global settings specified
+   in the ExternalizableHelper.xml descriptor.
+  -->
+  <serializer>
+     <class-name>com.tangosol.io.DefaultSerializer</class-name>
+  </serializer>
+  <request-timeout>60m</request-timeout>
+</config>

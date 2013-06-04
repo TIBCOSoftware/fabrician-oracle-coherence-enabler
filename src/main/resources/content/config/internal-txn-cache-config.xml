@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+
+<!--  
+      This file does not validate against the xsd because of the "override" attributes. 
+      This is used internally as part of a merge process ConfigHelper.resolveTransactionalScheme()
+      
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+ -->			  
+			  	
+<!DOCTYPE cache-config SYSTEM "cache-config.dtd">
+
+<cache-config>
+			  
+  <caching-scheme-mapping>
+    <cache-mapping>
+      <cache-name>V$TXN-NATURAL*</cache-name>
+      <scheme-name>V$txn-natural-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-VALUE*</cache-name>
+      <scheme-name>V$txn-value-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-VERSION*</cache-name>
+      <scheme-name>V$txn-version-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-XIDBLOCK</cache-name>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-XIDMEMBERS</cache-name>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-XAPREPARED</cache-name>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-VERSIONS</cache-name>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+    </cache-mapping>
+
+    <cache-mapping>
+      <cache-name>V$TXN-RECOVERY</cache-name>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+    </cache-mapping>
+  </caching-scheme-mapping>
+
+  <caching-schemes>
+    <!--
+    Default transactional scheme
+    -->
+    <transactional-scheme>
+      <scheme-name>default-transactional-scheme</scheme-name>
+      <service-name>TransactionalCache</service-name>
+    </transactional-scheme>
+
+    <!--
+    Natural key scheme.  All service specific configuration should be done
+    in this scheme.
+    -->
+    <distributed-scheme>
+      <scheme-name>V$txn-natural-scheme</scheme-name>
+      <service-name override='true'>TransactionalCache</service-name>
+      <thread-count override='true'>10</thread-count>
+      <key-partitioning>
+        <class-name>
+            com.tangosol.coherence.transaction.internal.storage.StorageKeyPartitioningStrategy
+        </class-name>
+      </key-partitioning>
+      <partition-listener>
+        <class-name>
+          com.tangosol.coherence.transaction.internal.storage.PartitionMonitor
+        </class-name>
+      </partition-listener>
+      <member-listener>
+        <class-name>
+          com.tangosol.coherence.transaction.internal.MembershipMonitor
+        </class-name>
+      </member-listener>
+      <backing-map-scheme>
+        <class-scheme>
+          <class-name>
+            com.tangosol.coherence.transaction.internal.storage.KeyBackingMap
+          </class-name>
+          <init-params>
+            <init-param>
+              <param-type>java.lang.String</param-type>
+              <param-value>{cache-name}</param-value>
+            </init-param>
+            <init-param>
+              <param-type>com.tangosol.net.BackingMapManagerContext</param-type>
+              <param-value>{manager-context}</param-value>
+            </init-param>
+          </init-params>
+        </class-scheme>
+      </backing-map-scheme>
+    </distributed-scheme>
+
+    <!--
+    Application data scheme
+    -->
+    <distributed-scheme>
+      <scheme-name>V$txn-value-scheme</scheme-name>
+      <service-name override='true'>TransactionalCache</service-name>
+      <thread-count override='true'>10</thread-count>
+      <backing-map-scheme>
+        <class-scheme>
+          <class-name>
+            com.tangosol.coherence.transaction.internal.storage.ValueBackingMap
+          </class-name>
+          <init-params>
+            <init-param>
+              <param-type>java.lang.String</param-type>
+              <param-value>{cache-name}</param-value>
+            </init-param>
+            <init-param>
+              <param-type>com.tangosol.net.BackingMapManagerContext</param-type>
+              <param-value>{manager-context}</param-value>
+            </init-param>
+            <init-param>
+              <param-type>java.lang.String</param-type>
+              <param-value>{high-units 10M}</param-value>
+            </init-param>
+          </init-params>
+        </class-scheme>
+      </backing-map-scheme>
+    </distributed-scheme>
+
+    <!--
+    Version scheme
+    -->
+    <distributed-scheme>
+      <scheme-name>V$txn-version-scheme</scheme-name>
+      <service-name override='true'>TransactionalCache</service-name>
+      <thread-count override='true'>10</thread-count>
+      <backing-map-scheme>
+        <local-scheme>
+          <listener>
+            <class-scheme>
+              <class-name>
+                com.tangosol.coherence.transaction.internal.storage.VersionBackingMapListener
+              </class-name>
+              <init-params>
+                <init-param>
+                  <param-type>java.lang.String</param-type>
+                  <param-value>{cache-name}</param-value>
+                </init-param>
+                <init-param>
+                  <param-type>com.tangosol.net.BackingMapManagerContext</param-type>
+                  <param-value>{manager-context}</param-value>
+                </init-param>
+              </init-params>
+            </class-scheme>
+          </listener>
+        </local-scheme>
+      </backing-map-scheme>
+    </distributed-scheme>
+
+    <!--
+    Global transaction framework scheme
+    -->
+    <distributed-scheme>
+      <scheme-name>V$txn-global-scheme</scheme-name>
+      <service-name>TransactionalCache</service-name>
+      <thread-count>10</thread-count>
+      <backing-map-scheme>
+        <local-scheme>
+        </local-scheme>
+      </backing-map-scheme>
+    </distributed-scheme>
+
+  </caching-schemes>
+</cache-config>

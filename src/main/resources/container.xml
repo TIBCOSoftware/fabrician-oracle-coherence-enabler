@@ -1,0 +1,550 @@
+<container class="com.datasynapse.fabric.container.ExecContainer" name="OracleCoherenceEnabler">
+
+    <property name="name" value="Oracle Coherence Enabler" />
+    <property name="version" value="${project.version}" />
+    <property name="description" value="Oracle Coherence Enabler" />
+    <property name="workDir" value="${COHERENCE_DOMAIN_DIR}" />
+    <property name="blocking" value="True" />
+    <property name="distributionVersion" value="${distro-version}" />
+    <property name="supportedDomainType" value="J2EE" />
+    <property name="shutdownTimeout" value="60000" />
+    <property name="modified" value="False" />
+
+    <script class="com.datasynapse.fabric.common.script.Script">
+        <property name="languageVersion" value="2.5" />
+        <property name="name" value="OracleCoherenceEnabler.py" />
+        <property name="language" value="python" />
+    </script>
+
+    <statisticsprovider class="com.datasynapse.fabric.stats.provider.ContainerScriptStatisticsProvider">
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Available Memory (MB)" />
+            <property name="description" value="The total available memory" />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="MB" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Available Memory (MB)" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Send Queue Size" />
+            <property name="description"
+                value="The number of packets currently scheduled for delivery. This number includes both packets that are to be sent immediately and packets that have already been sent and awaiting for acknowledgment. Packets that do not receive an acknowledgment within ResendDelay interval will be automatically resent." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Queued Packets" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Send Queue Size" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Request Average Duration" />
+            <property name="description" value="The average duration (in milliseconds) of an individual synchronous request issued by the service since the last time the statistics were reset." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Milliseconds" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Request Average Duration" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Request Pending Count" />
+            <property name="description" value="The number of pending synchronous requests issued by the service." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Requests" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Request Pending Count" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Task Average Duration" />
+            <property name="description" value="The number of pending synchronous requests issued by the service." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Milliseconds" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Task Average Duration" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Task Backlog" />
+            <property name="description" value="The number of pending synchronous requests issued by the service." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Tasks" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.AverageAggregator">
+                <property name="inputStatisticName" value="Task Backlog" />
+            </aggregator>
+        </supportedstatistic>
+        <supportedstatistic class="com.datasynapse.fabric.stats.BasicStatisticsMetadata">
+            <property name="name" value="Thread Average Active Count" />
+            <property name="description" value="The number of pending synchronous requests issued by the service." />
+            <property name="shared" value="False" />
+            <property name="default" value="True" />
+            <property name="units" value="Active Threads" />
+            <aggregator class="com.datasynapse.fabric.stats.aggregator.SourceAveragedAggregator">
+                <property name="inputStatisticName" value="Thread Average Active Count" />
+            </aggregator>
+        </supportedstatistic>
+    </statisticsprovider>
+
+
+    <runtimecontexttemplate class="com.datasynapse.fabric.common.DefaultRuntimeContext">
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${LISTEN_ADDRESS}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Name of the host machine on which this enabler will be running" />
+            <property name="name" value="HOST_NAME" />
+        </variable>
+
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="4" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Multi-cast  time to live in terms of network hops" />
+            <property name="name" value="MULTICAST_TTL" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Well Known Address for unicast; by default multicast is used so this is empty" />
+            <property name="name" value="COHERENCE_WKA_ADDRESS" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="8088" />
+            <property name="autoIncrementType" value="Numeric" />
+            <property name="type" value="String" />
+            <property name="description" value="Well Known Address port for unicast: This applies only if unicast is used" />
+            <property name="name" value="COHERENCE_WKA_PORT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${HOST_NAME}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Unicast listener address This applies only if unicast is used" />
+            <property name="name" value="COHERENCE_UNICAST_ADDRESS" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="8088" />
+            <property name="autoIncrementType" value="Numeric" />
+            <property name="type" value="String" />
+            <property name="description" value="Unicast listener port: This applies only if unicast is used" />
+            <property name="name" value="COHERENCE_UNICAST_PORT" />
+        </variable>
+
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="cluster1" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence cluster name" />
+            <property name="export" value="true" />
+            <property name="name" value="COHERENCE_CLUSTER_NAME" />
+        </variable>
+
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="227.7.7.9" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Cluster network address" />
+            <property name="export" value="true" />
+            <property name="name" value="COHERENCE_CLUSTER_ADDRESS" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="9778" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Cluster network port on the Cluster Address" />
+            <property name="export" value="true" />
+            <property name="name" value="COHERENCE_CLUSTER_PORT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="force" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Shutdown: force, none, false" />
+            <property name="name" value="SHUTDOWN" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="305000" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="In milliseconds, greather than or equal to the packet-delivery timeout" />
+            <property name="name" value="SERVICE_TIMEOUT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="300000" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="In milliseconds, greater of 300000 and two times the maximum expected full GC duration" />
+            <property name="name" value="PACKET_DELIVERY_TIMEOUT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="site" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Site Name" />
+            <property name="name" value="SITE_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${HOST_NAME}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Machine Name" />
+            <property name="name" value="MACHINE_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${HOST_NAME}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Rack Name" />
+            <property name="name" value="RACK_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="coherence" />
+            <property name="autoIncrementType" value="Append" />
+            <property name="type" value="String" />
+            <property name="description" value="Process Name" />
+            <property name="name" value="PROCESS_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${HOST_NAME}" />
+            <property name="autoIncrementType" value="Append" />
+            <property name="type" value="String" />
+            <property name="description" value="Member Name" />
+            <property name="name" value="MEMBER_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="Manager" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Role Name" />
+            <property name="name" value="ROLE_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Priority" />
+            <property name="name" value="PRIORITY" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="dev" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence run mode; possible values are prod, dev and eval" />
+            <property name="name" value="COHERENCE_RUN_MODE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="false" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence security enabled" />
+            <property name="name" value="COHERENCE_SECURITY_ENABLED" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="manager" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence username for the server" />
+            <property name="name" value="COHERENCE_USERNAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="password" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence password for the server" />
+            <property name="name" value="COHERENCE_PASSWORD" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="j2sdk" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="" />
+            <property name="name" value="JDK_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="1.6.0" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="" />
+            <property name="name" value="JDK_VERSION" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${GRIDLIB_JAVA_HOME}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="" />
+            <property name="name" value="JAVA_HOME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="" />
+            <property name="name" value="COHERENCE_HOME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="true" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Delete runtime directory" />
+            <property name="name" value="DELETE_RUNTIME_DIR" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="coherence_domain" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Coherence domain name" />
+            <property name="name" value="COHERENCE_DOMAIN_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${ENGINE_WORK_DIR}/${COHERENCE_DOMAIN_NAME}" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Coherence runtime directory" />
+            <property name="name" value="COHERENCE_DOMAIN_DIR" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/deploy" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Deployment directory for additional jars" />
+            <property name="name" value="COHERENCE_RUNTIME_DEPLOYMENT_DIR" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/config/tangosol-coherence.xml" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Configuration file for caches" />
+            <property name="name" value="COHERENCE_CONFIG_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/coherence.log" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="The Coherence log file" />
+            <property name="name" value="COHERENCE_LOG_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/security/keystore.jks" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="The Coherence security framework keystore file" />
+            <property name="name" value="COHERENCE_KEYSTORE_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/security/permissions.xml" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="The Coherence security framework permissions  file" />
+            <property name="name" value="COHERENCE_PERMISSIONS_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/security/login.config" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Coherence login config file" />
+            <property name="name" value="COHERENCE_LOGIN_CONFIG_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/config/reports" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Coherence report config" />
+            <property name="name" value="COHERENCE_REPORTS_DIR" />
+        </variable>
+
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_REPORTS_DIR}/report-group.xml" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Coherence report config" />
+            <property name="name" value="COHERENCE_REPORT_CONFIG" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="9000" />
+            <property name="autoIncrementType" value="Numeric" />
+            <property name="type" value="Environment" />
+            <property name="description" value="JMXport for JMX connection" />
+            <property name="name" value="RMI_REGISTRY_PORT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="3000" />
+            <property name="autoIncrementType" value="Numeric" />
+            <property name="type" value="Environment" />
+            <property name="description" value="RMI port for JMX remote connection" />
+            <property name="name" value="RMI_CONNECTION_PORT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="9099" />
+            <property name="autoIncrementType" value="Numeric" />
+            <property name="type" value="String" />
+            <property name="description" value="TCP proxy port for remote Coherence clients" />
+            <property name="name" value="TCP_PROXY_PORT" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="DistributedCache" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Service name. User for building JMX path to statistics" />
+            <property name="name" value="SERVICE_NAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="&quot;${COHERENCE_DOMAIN_DIR}/bin/cache-server.cmd&quot;" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Windows startup command" />
+            <property name="name" value="WINDOWS_STARTUP_COMMAND" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/bin/cache-server.sh" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Unix Startup Command" />
+            <property name="name" value="UNIX_STARTUP_COMMAND" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="512m" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Maximum heap size" />
+            <property name="name" value="MAX_HEAP" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="128m" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="Minimum heap size" />
+            <property name="name" value="MIN_HEAP" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="changeit" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Password for JMX access (if required)" />
+            <property name="name" value="JMX_PASSWORD" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="coherence" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="Username for JMX access (if required)" />
+            <property name="name" value="JMX_USERNAME" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="service:jmx:rmi://${HOST_NAME}:${RMI_CONNECTION_PORT}/jndi/rmi://${HOST_NAME}:${RMI_REGISTRY_PORT}/jmxrmi" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX URL for statistics and monitoring" />
+            <property name="name" value="JMX_URL" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="false" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX SSL enabled" />
+            <property name="name" value="JMX_SSL_ENABLED" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="false" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX Two way SSL enabled" />
+            <property name="name" value="JMX_TWO_WAY_SSL_ENABLED" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="false" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX security enabled" />
+            <property name="name" value="JMX_SECURITY_ENABLED" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/management.properties" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="JMX config file" />
+            <property name="name" value="JMX_CONFIG_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxssl.properties" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="JMX SSL config file" />
+            <property name="name" value="JMX_SSL_CONFIG_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxssl.jks" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX ssl keystore file" />
+            <property name="name" value="JMX_SSL_KEYSTORE_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxssl.jks" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX ssl trust store file" />
+            <property name="name" value="JMX_SSL_TRUSTSTORE_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="changeit" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX ssl keystore password" />
+            <property name="name" value="JMX_SSL_KEYSTORE_PASSWORD" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="changeit" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX ssl truststore password" />
+            <property name="name" value="JMX_SSL_TRUSTSTORE_PASSWORD" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxremote.password" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="Environment" />
+            <property name="description" value="JMX remote password file" />
+            <property name="name" value="JMX_PASSWORD_FILE" />
+        </variable>
+        <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxremote.access" />
+            <property name="autoIncrementType" value="None" />
+            <property name="type" value="String" />
+            <property name="description" value="JMX remote access file" />
+            <property name="name" value="JMX_ACCESS_FILE" />
+        </variable>
+    </runtimecontexttemplate>
+
+    <unixcommand class="com.datasynapse.fabric.container.LifecycleCommand">
+        <property name="shutdownCommand" value="${COHERENCE_DOMAIN_DIR}/bin/cache-server-shutdown.sh" />
+        <property name="startupCommand" value="${UNIX_STARTUP_COMMAND}" />
+    </unixcommand>
+
+    <windowscommand class="com.datasynapse.fabric.container.LifecycleCommand">
+        <property name="shutdownCommand" value="" />
+        <property name="startupCommand" value="${WINDOWS_STARTUP_COMMAND}" />
+    </windowscommand>
+
+    <supportedfeature class="com.datasynapse.fabric.container.Feature">
+        <property name="formTitle" value="Feature: Archive Support" />
+        <property name="description" value="Support for deploying archives" />
+        <property name="infoDescription" value="Enter the directory within the Grid Library that contains the archives to deploy." />
+        <property name="infoClass" value="com.datasynapse.fabric.domain.featureinfo.ArchiveFeatureInfo" />
+        <property name="name" value="Archive Support" />
+    </supportedfeature>
+
+    <supportedfeature class="com.datasynapse.fabric.container.Feature">
+        <property name="formTitle" value="Feature: Application Logging Support" />
+        <property name="description" value="Support for handling of custom application logs" />
+        <property name="infoDescription"
+            value="Specify if application logs are archived to the Engine log directory for viewing/searching. &lt;i&gt;Note: The current application logs are still available for viewing/searching if this is not checked.&lt;/i&gt;" />
+        <property name="infoClass" value="com.datasynapse.fabric.domain.featureinfo.ApplicationLoggingInfo" />
+        <property name="name" value="Application Logging Support" />
+    </supportedfeature>
+</container>
