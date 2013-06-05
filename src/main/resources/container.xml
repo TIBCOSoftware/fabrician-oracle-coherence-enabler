@@ -481,7 +481,7 @@
             <property name="value" value="${COHERENCE_DOMAIN_DIR}/management/jmxssl.jks" />
             <property name="autoIncrementType" value="None" />
             <property name="type" value="String" />
-            <property name="description" value="JMX ssl keystore file" />
+            <property name="description" value="The full path to the JMX ssl keystore file" />
             <property name="name" value="JMX_SSL_KEYSTORE_FILE" />
         </variable>
         <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">

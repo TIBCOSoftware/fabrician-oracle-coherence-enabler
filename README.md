@@ -130,7 +130,7 @@ override file conventionally named tangosol-coherence-override.xml, and any cust
 file referred from the operational override file, to the Component under the relative path config. 
 You may also need to set the SERVICE_NAME Runtime Variable.
 
-JMX security is disabled by default. To enable, place your .jks keystore file in the content/security path or otherwise update the COHERENCE_KEYSTORE_FILE runtime context variable to point to your keystore.
+Coherence security and JMX security are disabled by default. To enable, place your .jks keystore files in the content/security path or otherwise update the COHERENCE_KEYSTORE_FILE and JMX_SSL_KEYSTORE_FILE runtime context variables to point to your keystores.
 
 Full list of Runtime Context Variables:
 
@@ -468,7 +468,7 @@ Full list of Runtime Context Variables:
   <tr>
     <td>JMX_SSL_KEYSTORE_FILE</td>
     <td>String</td>
-    <td>JMX ssl keystore file</td>
+    <td>The full path to the JMX ssl keystore file</td>
     <td>${COHERENCE_DOMAIN_DIR}/management/jmxssl.jks</td>
   </tr>
   <tr>
