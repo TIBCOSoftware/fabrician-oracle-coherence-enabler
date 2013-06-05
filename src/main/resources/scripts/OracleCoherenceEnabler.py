@@ -266,8 +266,8 @@ def doStart():
                         type, value, traceback = sys.exc_info()
                         logger.severe("OracleCoherenceEnabler:doStart:Error extracting archive file:"+`value`)
                     
-            # we do not want the archive feature to install the archives
-            archiveFeatureInfo.setInstallArchivesViaFileCopy(False)
+        # we do not want the archive feature to install the archives
+        archiveFeatureInfo.setInstallArchivesViaFileCopy(False)
     
     # start coherence server
     proxy.doStart()
