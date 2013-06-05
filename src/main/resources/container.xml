@@ -333,7 +333,7 @@
             <property name="value" value="${COHERENCE_DOMAIN_DIR}/security/keystore.jks" />
             <property name="autoIncrementType" value="None" />
             <property name="type" value="String" />
-            <property name="description" value="The Coherence security framework keystore file" />
+            <property name="description" value="The full path to the Coherence security framework keystore file" />
             <property name="name" value="COHERENCE_KEYSTORE_FILE" />
         </variable>
         <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
