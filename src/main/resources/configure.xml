@@ -1,11 +1,11 @@
 <containerConfig name="Oracle Coherence Enabler">
 
-    <configFiles baseDir="config" include="coherence-cache-config.xml">
+    <configFiles baseDir="lib/coherence.jar" include="coherence-cache-config.xml">
         <xpath expression="/cache-config/caching-schemes/proxy-scheme/acceptor-config/tcp-acceptor/local-address/address" action="Set Node Text" runtimeVariable="HOST_NAME" />
         <xpath expression="/cache-config/caching-schemes/proxy-scheme/acceptor-config/tcp-acceptor/local-address/port" action="Set Node Text" runtimeVariable="TCP_PROXY_PORT" />
     </configFiles>
 
-    <configFiles baseDir="config" include="tangosol-coherence.xml">
+    <configFiles baseDir="lib/coherence.jar" include="tangosol-coherence.xml">
         <xpath expression="/coherence/cluster-config/member-identity/cluster-name" action="Set Node Text" runtimeVariable="COHERENCE_CLUSTER_NAME" />
         <xpath expression="/coherence/cluster-config/member-identity/site-name" action="Set Node Text" runtimeVariable="SITE_NAME" />
         <xpath expression="/coherence/cluster-config/member-identity/rack-name" action="Set Node Text" runtimeVariable="RACK_NAME" />
@@ -33,24 +33,24 @@
         <xpath expression="/coherence/license-config/license-mode" action="Set Node Text" runtimeVariable="COHERENCE_RUN_MODE" />
     </configFiles>
 
-    <configFiles baseDir="config" include="tangosol-coherence-override-dev.xml">
+    <configFiles baseDir="lib/coherence.jar" include="tangosol-coherence-override-dev.xml">
         <xpath expression="/coherence/cluster-config/multicast-listener/time-to-live" action="Set Node Text" runtimeVariable="MULTICAST_TTL" />
     </configFiles>
 
-    <configFiles baseDir="config" include="tangosol-coherence-override-eval.xml">
+    <configFiles baseDir="lib/coherence.jar" include="tangosol-coherence-override-eval.xml">
         <xpath expression="/coherence/cluster-config/multicast-listener/time-to-live" action="Set Node Text" runtimeVariable="MULTICAST_TTL" />
     </configFiles>
 
-    <configFiles baseDir="config" include="tangosol-coherence-override-prod.xml">
+    <configFiles baseDir="lib/coherence.jar" include="tangosol-coherence-override-prod.xml">
         <xpath expression="/coherence/cluster-config/multicast-listener/time-to-live" action="Set Node Text" runtimeVariable="MULTICAST_TTL" />
     </configFiles>
 
-    <configFiles baseDir="config/reports" include="report-all.xml">
+    <configFiles baseDir="lib/coherence.jar/reports" include="report-all.xml">
         <xpath expression="/report-group/output-directory" action="Set Node Text" runtimeVariable="COHERENCE_REPORTS_DIR" />
         <xpath expression="/report-group/report-list/report-config/location" action="Set Value In Node Text" value="${COHERENCE_REPORTS_DIR}" valuePattern="reports" />
     </configFiles>
 
-    <configFiles baseDir="config/reports" include="report-group.xml">
+    <configFiles baseDir="lib/coherence.jar/reports" include="report-group.xml">
         <xpath expression="/report-group/output-directory" action="Set Node Text" runtimeVariable="COHERENCE_REPORTS_DIR" />
         <xpath expression="/report-group/report-list/report-config/location" action="Set Value In Node Text" value="${COHERENCE_REPORTS_DIR}" valuePattern="reports" />
     </configFiles>
@@ -59,8 +59,8 @@
         <velocity />
     </configFiles>
 
-    <configFiles baseDir="security" exclude="login.config">
-        <velocity />
+    <configFiles baseDir="lib/security" include="login.config">
+       <regex pattern='keyStorePath=(.*);' replacement='"${COHERENCE_KEYSTORE_FILE}"'/>
     </configFiles>
-
+    
 </containerConfig>
