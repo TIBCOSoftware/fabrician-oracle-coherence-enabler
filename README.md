@@ -353,7 +353,7 @@ Full list of Runtime Context Variables:
     <td>COHERENCE_LOGIN_CONFIG_FILE</td>
     <td>Environment</td>
     <td>Coherence login config file</td>
-    <td>${COHERENCE_DOMAIN_DIR}/security/login.config</td>
+    <td>${COHERENCE_DOMAIN_DIR}/lib/security/login.config</td>
   </tr>
   <tr>
     <td>COHERENCE_REPORTS_DIR</td>

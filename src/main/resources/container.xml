@@ -344,7 +344,7 @@
             <property name="name" value="COHERENCE_PERMISSIONS_FILE" />
         </variable>
         <variable class="com.datasynapse.fabric.common.RuntimeContextVariable">
-            <property name="value" value="${COHERENCE_DOMAIN_DIR}/security/login.config" />
+            <property name="value" value="${COHERENCE_DOMAIN_DIR}/lib/security/login.config" />
             <property name="autoIncrementType" value="None" />
             <property name="type" value="Environment" />
             <property name="description" value="Coherence login config file" />
